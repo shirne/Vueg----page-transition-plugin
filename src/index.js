@@ -34,8 +34,8 @@ const plugin = {
     /** @type {string} 新场景route路径 */
     let route
 
-    /** @type {string} 离场route路径 */
-    let lastPath
+    /** @type {Array} route 记录 */
+    let pathHistory = []
 
     /** @type {string} 转场类型  first | forward | back | null */
     let transitionType
@@ -133,55 +133,61 @@ const plugin = {
 
     router.beforeEach((to, from, next) => {
       route = to
-      let toDepth = to.path.split('/').filter(v => !!v).length
-      let fromDepth = from.path.split('/').filter(v => !!v).length
 
-      transitionType = toDepth > fromDepth ? 'forward' : 'back'
-      //深度相同
-      if (toDepth === fromDepth) {
-        if (lastPath === to.path && toDepth < fromDepth) {
-          transitionType = 'back'
-        } else {
-          transitionType = 'forward'
-        }
-        //深度相同时禁用动画
-        if (op.disableAtSameDepths)
-          transitionType = null
-
-        lastPath = from.path
-      }
+      // 是否是定义过的
+      let defined = true
 
       //首次进入无效果
-      if (to.path === from.path && to.path === lastPath)
+      if (pathHistory.length === 0){
         transitionType = 'first'
+      }else{
+        // 处理map选项
+        const enter = Object.keys(op.map).find(key => op.map[key].enter && op.map[key].enter.includes(from.name))
+        const leave = Object.keys(op.map).find(key => op.map[key].leave && op.map[key].leave.includes(to.name))
+        
+        if (enter && enter === to.name) {
+          transitionType = 'back'
+        } else if (leave && leave === from.name) {
+          transitionType = 'back'
+        } else if (Object.keys(op.map).includes(from.name)) {
+          if (op.map[from.name]['enter'] && op.map[from.name]['enter'].includes(to.name)) {
+            transitionType = 'forward'
+          }
+          if (op.map[from.name]['leave'] && op.map[from.name]['leave'].includes(to.name)) {
+            transitionType = 'back'
+          }
+          if (op.map[from.name]['disable'] && op.map[from.name]['disable'].includes(to.name)) {
+            transitionType = null
+          }
+        } else if (Object.keys(op.map).includes(to.name)) {
+          if (op.map[to.name]['leave'] && op.map[to.name]['leave'].includes(from.name)) {
+            transitionType = 'forward'
+          }
+          if (op.map[to.name]['enter'] && op.map[to.name]['enter'].includes(from.name)) {
+            transitionType = 'back'
+          }
+          if (op.map[to.name]['disable'] && op.map[to.name]['disable'].includes(from.name)) {
+            transitionType = null
+          }
+        } else {
+          defined = false
+        }
+      }
 
-      // 处理map选项
-      const enter = Object.keys(op.map).find(key => op.map[key].enter && op.map[key].enter.includes(from.name))
-      const leave = Object.keys(op.map).find(key => op.map[key].leave && op.map[key].leave.includes(to.name))
-      if (enter && enter === to.name) {
-        transitionType = 'back'
-      } else if (leave && leave === from.name) {
-        transitionType = 'back'
-      } else if (Object.keys(op.map).includes(from.name)) {
-        if (op.map[from.name]['enter'] && op.map[from.name]['enter'].includes(to.name)) {
+      let hasIndex = pathHistory.indexOf(to.path)
+
+      if( !defined ){
+        if(hasIndex > -1){
+          transitionType = 'back'
+        }else{
           transitionType = 'forward'
         }
-        if (op.map[from.name]['leave'] && op.map[from.name]['leave'].includes(to.name)) {
-          transitionType = 'back'
-        }
-        if (op.map[from.name]['disable'] && op.map[from.name]['disable'].includes(to.name)) {
-          transitionType = null
-        }
-      } else if (Object.keys(op.map).includes(to.name)) {
-        if (op.map[to.name]['leave'] && op.map[to.name]['leave'].includes(from.name)) {
-          transitionType = 'forward'
-        }
-        if (op.map[to.name]['enter'] && op.map[to.name]['enter'].includes(from.name)) {
-          transitionType = 'back'
-        }
-        if (op.map[to.name]['disable'] && op.map[to.name]['disable'].includes(from.name)) {
-          transitionType = null
-        }
+      }
+      
+      if( hasIndex > -1 ){
+        pathHistory.splice(hasIndex+1,pathHistory.length)
+      }else{
+        pathHistory.push(to.path)
       }
 
       // 判断是否ios滑动返回.
