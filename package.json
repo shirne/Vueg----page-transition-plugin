@@ -1,6 +1,6 @@
 {
-  "name": "vueg",
-  "version": "1.4.5",
+  "name": "vueg-history",
+  "version": "1.5.0",
   "description": "[Vue] 页面级的转场动画插件",
   "main": "index.js",
   "scripts": {
@@ -8,18 +8,20 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jaweii/vueg.git"
+    "url": "git+https://github.com/shirne/VuegHistory"
   },
   "keywords": [
     "vue",
-    "transition"
+    "transition",
+    "route",
+    "history"
   ],
-  "author": "jawei",
+  "author": "shirne",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/jaweii/vueg/issues"
+    "url": "https://github.com/shirne/VuegHistory/issues"
   },
-  "homepage": "https://github.com/jaweii/vueg#readme",
+  "homepage": "https://github.com/shirne/VuegHistory#readme",
   "dependencies": {
     "animate.css": "^3.7.0"
   }
