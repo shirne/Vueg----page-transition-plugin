@@ -31,12 +31,12 @@
 #### 安装插件
 
 ```js
-npm i vueg --save
+npm i vueg-history --save
 ```
 
 #### 引入插件
 ```js
-import vueg from 'vueg'
+import vueg from 'vueg-history'
 
 Vue.use(vueg, new Router(), Options) // 传入实例化后的router, Options为可选的插件配置
 
