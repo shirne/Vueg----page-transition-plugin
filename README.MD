@@ -9,8 +9,8 @@
 <br>
 
 ## 修改版 shirne 2019/11/04
-原始项目: [jaweii/Vueg----page-transition-plugin](https://github.com/jaweii/Vueg----page-transition-plugin)<br />
-移除原来的记录离开路由的方法, 和根据路径深度判断进退的方法, 修改为记录路由历史<br />
+Forked from: [jaweii/Vueg----page-transition-plugin](https://github.com/jaweii/Vueg----page-transition-plugin)<br />
+移除原来的记录离开路由的方法, 和根据路径深度判断进退的方法, 修改为记录路由历史, 并增加ts types<br />
 判断转场效果逻辑:
 ```
 1.先判断是否初始化

@@ -1,7 +1,7 @@
 {
   "name": "vueg-history",
-  "version": "1.5.2",
-  "description": "[Vue] 页面级的转场动画插件 - 由vueg修改,按路由历史记录匹配转场动画",
+  "version": "1.5.3",
+  "description": "[Vue] Page transition plugin - Forked from vueg, fix route history match, add ts types",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
