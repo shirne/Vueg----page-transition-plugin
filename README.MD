@@ -20,10 +20,15 @@
 
 其它功能和设置不变
 ```
+## 多页面场景切换效果
+注意: 区别在我的页面再进二级页面后的返回效果
+|VuegHistory效果|Vueg效果|
+|:---:|:---:|
+|![VuegHistory效果](image/vueg-history.gif "VuegHistory效果")|![Vueg效果](image/vueg.gif "Vueg效果")|
 
 ## Example：
 
-<img src="https://raw.githubusercontent.com/jaweii/Vueg----page-transition-plugin/master/image/GIF.gif" height="600"/>
+![动画效果](image/GIF.gif "动画效果")
 
 
 ## 使用方法
