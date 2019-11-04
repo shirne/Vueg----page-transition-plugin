@@ -1,6 +1,6 @@
 {
   "name": "vueg-history",
-  "version": "1.5.3",
+  "version": "1.5.4",
   "description": "[Vue] Page transition plugin - Forked from vueg, fix route history match, add ts types",
   "main": "index.js",
   "scripts": {

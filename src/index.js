@@ -77,6 +77,8 @@ const plugin = {
     //全局vueg配置
     Object.assign(op, options)
 
+    const mapKeys = Object.keys(op.map);
+
     //旧组件退出后会被销毁，所以建个容器，在销毁后重新挂在上去，作为“底色”
     function setBackground(el) {
       if (this && this.$el) el = this.$el
@@ -141,37 +143,35 @@ const plugin = {
       if (pathHistory.length === 0){
         transitionType = 'first'
       }else{
+        defined = false
+
         // 处理map选项
-        const enter = Object.keys(op.map).find(key => op.map[key].enter && op.map[key].enter.includes(from.name))
-        const leave = Object.keys(op.map).find(key => op.map[key].leave && op.map[key].leave.includes(to.name))
-        
-        if (enter && enter === to.name) {
-          transitionType = 'back'
-        } else if (leave && leave === from.name) {
-          transitionType = 'back'
-        } else if (Object.keys(op.map).includes(from.name)) {
+        if( mapKeys.includes(from.name) ){
+          defined = true
           if (op.map[from.name]['enter'] && op.map[from.name]['enter'].includes(to.name)) {
             transitionType = 'forward'
-          }
-          if (op.map[from.name]['leave'] && op.map[from.name]['leave'].includes(to.name)) {
+          }else if (op.map[from.name]['leave'] && op.map[from.name]['leave'].includes(to.name)) {
             transitionType = 'back'
-          }
-          if (op.map[from.name]['disable'] && op.map[from.name]['disable'].includes(to.name)) {
+          }else if (op.map[from.name]['disable'] && op.map[from.name]['disable'].includes(to.name)) {
             transitionType = null
+          }else{
+            defined = false
           }
-        } else if (Object.keys(op.map).includes(to.name)) {
+        }
+
+        if( !defined && mapKeys.includes(to.name) ){
+          defined = true
           if (op.map[to.name]['leave'] && op.map[to.name]['leave'].includes(from.name)) {
             transitionType = 'forward'
-          }
-          if (op.map[to.name]['enter'] && op.map[to.name]['enter'].includes(from.name)) {
+          }else if (op.map[to.name]['enter'] && op.map[to.name]['enter'].includes(from.name)) {
             transitionType = 'back'
-          }
-          if (op.map[to.name]['disable'] && op.map[to.name]['disable'].includes(from.name)) {
+          }else if (op.map[to.name]['disable'] && op.map[to.name]['disable'].includes(from.name)) {
             transitionType = null
+          }else{
+            defined = false
           }
-        } else {
-          defined = false
         }
+
       }
 
       let hasIndex = pathHistory.indexOf(to.path)
