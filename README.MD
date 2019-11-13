@@ -15,8 +15,9 @@ Forked from: [jaweii/Vueg----page-transition-plugin](https://github.com/jaweii/V
 ```
 1.先判断是否初始化
 2.优先从map判断, 有逻辑则忽略后续的先后判断
-3.从路由历史搜索, 有记录则设置为后退, 无记录设为前进
-4.调整路由历史记录, 已存在则切除之后的路由, 不存在则存入新的
+3.如果设置了根页面,从其它页面切换到根页面总是使用离场效果
+4.从路由历史搜索, 有记录则设置为后退, 无记录设为前进
+5.调整路由历史记录, 已存在则切除之后的路由, 不存在则存入新的
 
 其它功能和设置不变
 ```
@@ -74,10 +75,12 @@ Vue.use(vueg, new Router(), Options) // 传入实例化后的router, Options为�
 @property {number} duration 动画时长。默认为0.3
 @property {string} enter 入场动画，默认为'fadeInRight'
 @property {string} leave 离场动画，默认为'fadeInLeft'
-@property {boolean} disableAtSameDepths 深度相同时禁用动画(通过url中的反斜杠数量/判断)。默认为false
+@property {boolean} useDepths 是否启用深度匹配。默认为false
 @property {boolean} shadow 是否为入场页面添加阴影。默认为true
+@property {Object} roots 根页面列表 从其它页面切换到根页面,总是使用离场效果。不影响map中匹配的效果 
 @property {Object} map 默认为空情况下，vueg根据url深度判断是入场还是离场，但有时可能并不是你想要的效果，这时你可以使用map选项。
 例子：`
+roots: ['index','user'],
 map: {
  'user-login':{
     enter: ['user-register'],

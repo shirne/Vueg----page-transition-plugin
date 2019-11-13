@@ -7,7 +7,7 @@ import './index.css'
  * @property {number} duration 动画时长。默认为0.3
  * @property {string} enter 入场动画，默认为'fadeInRight'
  * @property {string} leave 离场动画，默认为'fadeInLeft'
- * @property {boolean} disableAtSameDepths 深度相同时禁用动画(通过url中的反斜杠数量/判断)。默认为false
+ * @property {boolean} useDepths 是否启用深度匹配。默认为false
  * @property {boolean} shadow 是否为入场页面添加阴影。默认为true
  * @property {Object} map 有时候通过url判断的转场类型可能并不是你想要的，这时你可以使用map选项。
  * 指定路由A到路由A/B/C的转场类型是enter还是leave，覆盖通过url深度判断的转场类型。
@@ -172,6 +172,29 @@ const plugin = {
           }
         }
 
+        if(op.roots && !defined){
+          defined = true
+          if(op.roots.includes(from.name)){
+            transitionType = 'forward'
+          }else if(op.roots.includes(to.name)){
+            transitionType = 'back'
+          }else{
+            defined = false
+          }
+        }
+
+        if(!defined && op.useDepths){
+          let fromDepth = from.path.split('/').length;
+          let toDepth = to.path.split('/').length;
+          defined = true
+          if(fromDepth > toDepth){
+            transitionType = 'back'
+          }else if(fromDepth < toDepth){
+            transitionType = 'forward'
+          }else{
+            defined = false
+          }
+        }
       }
 
       let hasIndex = pathHistory.indexOf(to.path)
@@ -361,7 +384,7 @@ const plugin = {
         duration: 0.3,
         enter: 'fadeInRight',
         leave: 'fadeInLeft',
-        disableAtSameDepths: false,
+        useDepths: false,
         shadow: true,
         map: {}
       }
